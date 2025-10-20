@@ -2,11 +2,11 @@
 
 
 # check that the script gets passed three parameters: <lowercasestackname> <GitHubBranch> <StageName>
-if [ "$#" -ne 3 ]; then
-  echo "Usage: ./createPipeline.sh <lowercasestackname> <GitHubBranch> <StageName>"
+if [ "$#" -ne 4 ]; then
+  echo "Usage: ./createPipeline.sh <lowercasestackname> <GitHubBranch> <StageName> <Region>"
   exit 1
 else
-  echo "All parameters included. Running the script with stack name: $1, GitHub branch: $2, and Stage name: $3"
+  echo "All parameters included. Running the script with stack name: $1, GitHub branch: $2,  Stage name: $3, and Region: $4."
 
 
   # This splits cloudFormation file into 2 parts based on the delimeter 'END OF PIPLEINE TEMPLATE'
@@ -18,6 +18,7 @@ else
   aws cloudformation create-stack \
     --stack-name $1 \
     --template-body file://cloudFormationPart00 \
+    --region $4 \
     --capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
     --parameters ParameterKey=GitHubBranch,ParameterValue=$2 \
                 ParameterKey=StageName,ParameterValue=$3 \

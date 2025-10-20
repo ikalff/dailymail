@@ -1,18 +1,18 @@
 
-import XButton from './XButton'
+// import XButton from './XButton'
 
 type Props = {
   children: any
-  setShowModal?: any
-  showCloseButton?: boolean
-  closeButtonValue?: any
+  // setShowModal?: any
+  // showCloseButton?: boolean
+  // closeButtonValue?: any
 }
 
 function Modal({
   children,
-  setShowModal,
-  showCloseButton,
-  closeButtonValue
+  // setShowModal,
+  // showCloseButton,
+  // closeButtonValue = false
 }: Props) {
 
   return <div className={`fixed top-0 left-0 min-h-full w-full flex items-center justify-center p-6 bg-black bg-opacity-30 z-50`}
@@ -32,11 +32,11 @@ function Modal({
 
       <div className={`relative border-none`}>
 
-        {setShowModal && showCloseButton && <div className={`absolute right-0 top-0 m-1`}>
+        {/* {setShowModal && showCloseButton && <div className={`absolute right-0 top-0 m-1`}>
           <XButton clickFunction={() => {
-            setShowModal(closeButtonValue || false)
+            setShowModal(closeButtonValue)
           }} />
-        </div>}
+        </div>} */}
         {children}
       </div>
     </div>

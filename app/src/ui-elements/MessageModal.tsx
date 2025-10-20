@@ -4,8 +4,8 @@
 
 import Modal from "./Modal"
 import Button from "../ui-elements/Button"
-import Spinner from "./Spinner"
-import XButton from "./XButton"
+// import Spinner from "./Spinner"
+// import XButton from "./XButton"
 
 type Props = {
     showModal: ObjectStringKeyAnyValue
@@ -25,9 +25,9 @@ function MessageModal({
     return <Modal>
         <div className={`w-full flex flex-col gap-4 items-center`}>
 
-            {showModal["spinner"] && <div className={`absolute right-0 top-0 m-1`}>
+            {/* {showModal["spinner"] && <div className={`absolute right-0 top-0 m-1`}>
                 <XButton clickFunction={() => setShowModal(false)} />
-            </div>}
+            </div>} */}
 
             {showModal["error"] && <div className={`w-full flex flex-col gap-2 items-center`}>
                 <p className={`text-4xl`}>⛔️</p>
@@ -49,9 +49,9 @@ function MessageModal({
                 <p className={`text-center`}>{showModal["warning"]}</p>
             </div>}
 
-            {showModal["spinner"] && <div className={`w-full flex flex-col gap-2 items-center`}>
+            {/* {showModal["spinner"] && <div className={`w-full flex flex-col gap-2 items-center`}>
                 <Spinner size="large">{showModal["spinner"]}</Spinner>
-            </div>}
+            </div>} */}
 
             {!showModal["spinner"] && <Button
                 onClick={() => setShowModal(null)}

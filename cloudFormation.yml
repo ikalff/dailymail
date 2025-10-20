@@ -19,6 +19,10 @@ Parameters:
     Type: String
     Default: production
 
+  Region:
+    Type: String
+    Default: eu-west-1
+
 Resources:
   # PIPELINE
 

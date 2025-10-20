@@ -18,7 +18,7 @@ Update the default repo name in cloudformation template.
 ### To create the stack:
 ./createPipeline.sh <lowercasestackname> <GitHubBranch> <StageName>
 eg
-./createPipeline.sh dailymail main production
+./createPipeline.sh dailymail main production eu-west-2
 
 ### After the pipeline has been created, you will need to manually update the Codestar connection that links it to github.
 When running the pipeline for the first time, it will create a pending Codestar connection. This needs to be manually linked to github.
