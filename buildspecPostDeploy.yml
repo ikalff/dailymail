@@ -1,0 +1,68 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: latest
+    commands:
+      - pwd
+      - pip3 install boto3
+      - pip3 install awscli --upgrade --user
+      - aws --version
+      - ls
+
+  build:
+    on-failure: CONTINUE
+    commands:
+      - printenv
+      - cd $CODEBUILD_SRC_DIR
+      - cd $CODEBUILD_SRC_DIR_DeployOutputsArtifact
+      - cat cloudformationOutputs.json
+
+      #################### Game app ####################
+      - cd $CODEBUILD_SRC_DIR_DeployOutputsArtifact
+      - GAMEAPP_BUCKET_NAME=$(cat cloudformationOutputs.json | jq -r .GameAppBucket)
+      - echo "GAMEAPP BUCKET NAME:"
+      - echo $GAMEAPP_BUCKET_NAME
+      - CLOUDFRONT_GAMEAPP_DISTRIBUTION_ID=`cat cloudformationOutputs.json | jq -r .GameAppCloudfrontDistributionId`
+      - cp cloudformationOutputs.json $CODEBUILD_SRC_DIR/app-game/src
+      - cd $CODEBUILD_SRC_DIR/app-game
+      - npm install
+      - echo "running build..."
+      - npm run build
+      - echo "build completed"
+      - ls
+
+      ################ Client app ####################
+      - cd $CODEBUILD_SRC_DIR_DeployOutputsArtifact
+      - CLIENTAPP_BUCKET_NAME=$(cat cloudformationOutputs.json | jq -r .ClientAppBucket)
+      - echo "CLIENTAPP BUCKET NAME:"
+      - echo $CLIENTAPP_BUCKET_NAME
+      - CLOUDFRONT_CLIENTAPP_DISTRIBUTION_ID=`cat cloudformationOutputs.json | jq -r .ClientAppCloudfrontDistributionId`
+      - cp cloudformationOutputs.json $CODEBUILD_SRC_DIR/app-client/src
+      - cd $CODEBUILD_SRC_DIR/app-client
+      - npm install
+      - echo "running build..."
+      - npm run build
+      - echo "build completed"
+      - ls
+
+      
+
+  post_build:
+    commands:
+      - printenv
+      - cd $CODEBUILD_SRC_DIR
+
+      #################### Game app ####################
+      - echo $GAMEAPP_BUCKET_NAME
+      - aws s3 cp app-game/dist/ s3://$GAMEAPP_BUCKET_NAME --recursive
+      - echo $CLOUDFRONT_GAMEAPP_DISTRIBUTION_ID
+      - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_GAMEAPP_DISTRIBUTION_ID --paths "/*"
+
+
+      ################ Client app ####################
+      - echo $CLIENTAPP_BUCKET_NAME
+      - aws s3 cp app-client/dist/ s3://$CLIENTAPP_BUCKET_NAME --recursive
+      - echo $CLOUDFRONT_CLIENTAPP_DISTRIBUTION_ID
+      - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_CLIENTAPP_DISTRIBUTION_ID --paths "/*"
+      - echo "Build and deployment completed successfully."

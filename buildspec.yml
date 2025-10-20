@@ -1,0 +1,27 @@
+version: 0.2
+phases:
+
+  install:
+    runtime-versions:
+      nodejs: latest
+      python: 3.11
+
+    commands:
+      - pip install awscli --upgrade --user
+
+      # install requirements for lambdas
+      # - cd 'websocket'
+      # - pip3 install -r requirements.txt -t ./
+      # - rm -rf __pycache__
+      # - rm -rf */__pycache__
+      # - rm -rf *.dist-info
+      # - cd ../
+
+      # build
+      - BUCKET_NAME=`echo $CODEBUILD_SOURCE_VERSION | cut -d ":" -f 6 | cut -d "/" -f 1`
+      - aws cloudformation package --template-file cloudFormation.yml --s3-bucket $BUCKET_NAME --output-template-file generatedCloudFormation.yml --debug
+
+artifacts:
+  type: zip
+  files:
+    - '**/*'
