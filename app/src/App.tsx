@@ -10,7 +10,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setShowModal(true)
-    }, 5000)
+    }, 3000)
 
     return () => clearTimeout(timer)
   }, [])
