@@ -24,8 +24,8 @@ phases:
       - echo "APP BUCKET NAME:"
       - echo $APP_BUCKET_NAME
       - CLOUDFRONT_APP_DISTRIBUTION_ID=`cat cloudformationOutputs.json | jq -r .AppCloudfrontDistributionId`
-      - cp cloudformationOutputs.json $CODEBUILD_SRC_DIR/app-game/src
-      - cd $CODEBUILD_SRC_DIR/app-game
+      - cp cloudformationOutputs.json $CODEBUILD_SRC_DIR/app/src
+      - cd $CODEBUILD_SRC_DIR/app
       - npm install
       - echo "running build..."
       - npm run build
@@ -39,7 +39,7 @@ phases:
 
       #################### App ####################
       - echo $APP_BUCKET_NAME
-      - aws s3 cp app-game/dist/ s3://$APP_BUCKET_NAME --recursive
+      - aws s3 cp app/dist/ s3://$APP_BUCKET_NAME --recursive
       - echo $CLOUDFRONT_APP_DISTRIBUTION_ID
       - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_APP_DISTRIBUTION_ID --paths "/*"
 
